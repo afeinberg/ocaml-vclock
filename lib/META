@@ -1,0 +1,5 @@
+name = "vectorClock""
+version = "0.1"
+description = "OCaml Vector Clock implementation"
+archive(byte) = "vectorClock.cma"
+archive(native) = "vectorClock.cmxa"
