@@ -1,1 +1,3 @@
-Based on codahale's Scala implementation: https://github.com/codahale/vlock/
+Vector clocks in OCaml: just for fun. Based on Voldemort's Java
+implementation and on codahale's Scala implementation
+(https://github.com/codahale/vlock/).
