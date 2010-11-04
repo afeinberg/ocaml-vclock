@@ -21,7 +21,7 @@ let vector_clock_resolver a b =
 let resolve_conflict resolver lst =
   match lst with
       x :: xs -> 
-  			V.value (List.fold_left 
+  		V.value (List.fold_left 
                    (fun a b ->
                      match (resolver a b) with
                          Before -> b

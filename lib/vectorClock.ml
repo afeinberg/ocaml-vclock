@@ -4,7 +4,7 @@ sig
   include PartiallyOrdered
   type version_vector
   val empty : t
-  val incremented : int -> int64 -> t -> t
+  val incremented : int -> int64 -> int64 -> t -> t
   val less_than : version_vector -> version_vector -> bool
   val ts : t -> int64
 end
@@ -46,10 +46,10 @@ struct
     match v with 
         VectorClock(t, _) -> t
           
-  let incremented n t v =
+  let incremented n t ts v =
     match v with
         VectorClock(_, versions) ->
-          VectorClock(t, IntOptionMap.put n t versions)
+          VectorClock(ts, IntOptionMap.put n t versions)
             
   let less_than a b = 
     (IntMap.for_all (fun n t ->
