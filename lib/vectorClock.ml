@@ -41,7 +41,7 @@ let maybe_compare (_, versions) (_, that) =
     Some (-1)
   else if (less_than that versions) then
     Some 1
-  else if (compare versions that) == 0 then 
+  else if (compare versions that) = 0 then 
     Some 0
   else
     None
