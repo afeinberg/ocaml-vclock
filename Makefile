@@ -1,19 +1,15 @@
-FILES=\
-	versioned.cma versioned.cmxa versioned.a \
-	versioned.mli versioned.cmi \
-	vectorClock.cma vectorClock.cmxa vectorClock.a \
-	conflictResolver.cma conflictRsolver.cmxa conflictResolver.a
+FILES= \
+	versioned.cmi vectorClock.cmi conflictResolver.cmi \
+	vclock.cma vclock.cmxa vclock.a
 
 BFILES=$(addprefix _build/lib/,$(FILES))
 
 .PHONY: all
 all:
-	ocamlbuild -I lib versioned.cma versioned.cmxa
-	ocamlbuild -I lib vectorClock.cma vectorClock.cmxa
-	ocamlbuild -I lib conflictResolver.cma conflictResolver.cmxa
+	ocamlbuild lib/vclock.cma lib/vclock.cmxa
 
 test:
-	ocamlbuild -I lib lib_test/basic.native
+	ocamlbuild lib_test/basic.native
 	./basic.native; echo
 
 .PHONY: all
@@ -22,15 +18,11 @@ doc:
 
 .PHONY: install
 install:
-	ocamlfind install versioned lib/META $(BFILES)
-	ocamlfind install vectorClock lib/META $(BFILES)
-	ocamlfind install conflictResolver lib/META $(BFILES)
+	ocamlfind install vclock lib/META $(BFILES)
 
 .PHONY: uninstall
 uninstall:
-	ocamlfind remove versioned
-	ocamlfind remove vectorClock
-	ocamlfind remove conflictResolver
+	ocamlfind remove vclock
 
 .PHONY: reinstall
 reinstall: all uninstall install
