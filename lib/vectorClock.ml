@@ -8,42 +8,30 @@ end
   
 module IntMap = Map.Make(IntOrdered)         
 
-module IntDefaultMap =
-struct
-  type t = int64 IntMap.t
+let find_default k m = 
+  try 
+    IntMap.find k m
+  with Not_found -> 
+    0L
 
-  open IntMap 
-
-  let empty = empty
-    
-  let put k v m =
-    add k v m
-
-  let find k m = 
-    try 
-      find k m
-    with Not_found -> 
-      0L
-end
-  
-type version_vector = IntDefaultMap.t
+type version_vector = int64 IntMap.t
 
 type t = int64 * version_vector
     
-let empty = (0L, IntDefaultMap.empty)
+let empty = (0L, IntMap.empty)
     
 let ts = fst 
         
 let incremented n t ts (_, versions) =
-  (ts, IntDefaultMap.put n t versions)
+  (ts, IntMap.add n t versions)
           
 let less_than a b = 
   (IntMap.for_all 
-     (fun n t -> t <= IntDefaultMap.find n b) 
+     (fun n t -> t <= find_default n b) 
      a) 
   &&
   (IntMap.exists 
-     (fun n t -> t < IntDefaultMap.find n b) 
+     (fun n t -> t < find_default n b) 
      a)
   ||
   (IntMap.cardinal a < IntMap.cardinal b)
