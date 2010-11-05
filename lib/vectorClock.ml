@@ -17,14 +17,7 @@ struct
   let empty = empty
     
   let put k v m =
-    add k v 
-      (try 
-         let _i: int64 = 
-           IntMap.find k m
-         in
-           remove k m 
-       with Not_found ->
-         m)
+    add k v m
 
   let find k m = 
     try 
