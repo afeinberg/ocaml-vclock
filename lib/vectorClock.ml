@@ -1,13 +1,4 @@
 open Versioned
-module type VectorClockSig = 
-sig
-  include PartiallyOrdered
-  type version_vector
-  val empty : t
-  val incremented : int -> int64 -> int64 -> t -> t
-  val less_than : version_vector -> version_vector -> bool
-  val ts : t -> int64
-end
 
 module IntOrdered =
 struct
@@ -34,38 +25,36 @@ end
   
 module IntOptionMap = OptionMap(IntMap)
   
-module VectorClock : VectorClockSig =
-struct
-  type version_vector = int64 IntOptionMap.t
-  type t = int64 * version_vector
-      
-  let empty = (0L, IntOptionMap.empty)
-      
-  let ts = fst 
+type version_vector = int64 IntOptionMap.t
+
+type t = int64 * version_vector
+    
+let empty = (0L, IntOptionMap.empty)
+    
+let ts = fst 
+        
+let incremented n t ts (_, versions) =
+  (ts, IntOptionMap.put n t versions)
           
-  let incremented n t ts (_, versions) =
-    (ts, IntOptionMap.put n t versions)
-            
-  let less_than a b = 
-    (IntMap.for_all (fun n t ->
-      t <= (match IntOptionMap.find n b with
+let less_than a b = 
+  (IntMap.for_all (fun n t ->
+    t <= (match IntOptionMap.find n b with
+        Some(x) -> x
+      | None -> 0L)) a) 
+  &&
+    (IntMap.exists (fun n t ->
+      t < (match IntOptionMap.find n b with
           Some(x) -> x
-        | None -> 0L)) a) 
-    &&
-      (IntMap.exists (fun n t ->
-        t < (match IntOptionMap.find n b with
-            Some(x) -> x
-          | None -> 0L)) a)
-    ||
-      (IntMap.cardinal a < IntMap.cardinal b)
-      
-  let maybe_compare (_, versions) (_, that) = 
-    if (less_than versions that) then
-      Some (-1)
-    else if (less_than that versions) then
-      Some 1
-    else if (compare versions that) == 0 then 
-      Some 0
-    else
-      None
-end
+        | None -> 0L)) a)
+  ||
+    (IntMap.cardinal a < IntMap.cardinal b)
+    
+let maybe_compare (_, versions) (_, that) = 
+  if (less_than versions that) then
+    Some (-1)
+  else if (less_than that versions) then
+    Some 1
+  else if (compare versions that) == 0 then 
+    Some 0
+  else
+    None

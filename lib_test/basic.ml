@@ -1,6 +1,5 @@
 open Printf
 open OUnit
-open VectorClock
 
 module V = Versioned.Make(VectorClock)
 
