@@ -1,3 +1,5 @@
+default: test
+
 FILES= \
 	versioned.cmi vectorClock.cmi conflictResolver.cmi \
 	vclock.cma vclock.cmxa vclock.a
@@ -8,7 +10,7 @@ BFILES=$(addprefix _build/lib/,$(FILES))
 all:
 	ocamlbuild lib/vclock.cma lib/vclock.cmxa
 
-test:
+test: all
 	ocamlbuild lib_test/basic.native
 	./basic.native; echo
 
