@@ -17,23 +17,16 @@ end
 module Make(PartOrd: PartiallyOrdered) =
 struct
   type version = PartOrd.t
-  type 'a t = Versioned of 'a * version
+  type 'a t = 'a * version
       
-  let maybe_compare a b = 
-    match a, b with
-        Versioned(_, v1), Versioned(_, v2) ->
-          PartOrd.maybe_compare v1 v2
+  let maybe_compare (_, v1) (_, v2) = 
+    PartOrd.maybe_compare v1 v2
             
-  let value a = 
-    match a with
-        Versioned(v, _) -> v
+  let value (v, _) = v
           
-  let version a =
-    match a with 
-        Versioned(_, v) -> v
+  let version (_, ver) = ver
           
-  let create v ver = 
-    Versioned(v, ver)
+  let create v ver = v, ver
 end  
 
        
