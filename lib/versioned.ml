@@ -22,11 +22,9 @@ struct
   let maybe_compare (_, v1) (_, v2) = 
     PartOrd.maybe_compare v1 v2
             
-  let value (v, _) = v
-          
-  let version (_, ver) = ver
-          
-  let create v ver = v, ver
+  let value = fst
+  let version = snd
+  let create v ver = (v, ver)
 end  
 
        
